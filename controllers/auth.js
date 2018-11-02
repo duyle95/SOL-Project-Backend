@@ -28,8 +28,7 @@ exports.signin = async (req, res, next) => {
 
 exports.signupBasic = async (req, res, next) => {
     // req.body contains: { email, password, _company, role, company_code }
-    console.log(req.body);
-    const { email, password, company_code } = req.body.user;
+    const { email, password, company_code, full_name } = req.body.user;
     // check if empty email or password\
     if (!email || !password) {
         return res.status(422).send({ error: "You must provide an email address and a password!"});
@@ -47,9 +46,15 @@ exports.signupBasic = async (req, res, next) => {
         return res.status(422).send({ error: "Email is in use!" });
     }
 
+    // check if full_name is duplicate
+    let existingUser = await User.findOne({ full_name: full_name.toLowerCase() });
+    if (existingUser) {
+        return res.status(422).send({ error: "There is already someone with this name!" });
+    }
+
     // save basic user to database and give them jwt token
     try {
-        const user = new User({ email, password, _company: company._id, role: "basic" });
+        const user = new User({ email, password, _company: company._id, role: "basic", full_name });
         await user.save();
         res.json({ token: tokenForUser(user) });
     } catch (e) {

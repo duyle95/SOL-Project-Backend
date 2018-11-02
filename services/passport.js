@@ -24,7 +24,7 @@ const localLogin = new LocalStrategy(localOptions, (email, password, done) => {
                 return done(null, false);
             }
             
-            return done(null, { email: user.email, id: user._id, role: user.role });
+            return done(null, { email: user.email, id: user._id, role: user.role, _company: user._company });
         });
     });
 });
@@ -41,7 +41,7 @@ const jwtLogin = new JwtStrategy(jwtOptions, (payload, done) => {
         }
         
         if (user) {
-            return done(null, { email: user.email, id: user._id, role: user.role });
+            return done(null, { email: user.email, id: user._id, role: user.role, _company: user._company });
         } else {
             return done(null, false);
         }

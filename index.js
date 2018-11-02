@@ -29,6 +29,7 @@ app.get("/", (req, res) => {
 
 app.use(passport.initialize());
 require("./routes/authRoutes")(app);
+require('./routes/replacementRoutes')(app);
 
 app.listen(port, () => {
     console.log("Listening on port " + port);
