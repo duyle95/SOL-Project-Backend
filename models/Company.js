@@ -13,8 +13,7 @@ const companySchema = new Schema({
     company_code: {
         type: String,
         required: true
-    },
-    shift_replacement: [ReplacementDetailSchema]
+    }
     // more data later: email, phone, address, postcode, time_zone
 });
 

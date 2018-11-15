@@ -14,6 +14,7 @@ exports.currentUser = (req, res, next) => {
     }
   
     res.send(req.user);
+    // res.status(500).send({ error: "Something went wrong!" });
   };
 
 // Some testing here
@@ -23,7 +24,7 @@ exports.secret = (req, res, next) => {
 
 exports.signin = async (req, res, next) => {
     // return a jwt, front end keeps jwt in localstorage and user's email and id in redux store for future use
-    res.json({ token: tokenForUser(req.user) });
+    res.json({ token: tokenForUser(req.user), user: req.user });
 }
 
 exports.signupBasic = async (req, res, next) => {
@@ -56,7 +57,7 @@ exports.signupBasic = async (req, res, next) => {
     try {
         const user = new User({ email, password, _company: company._id, role: "basic", full_name });
         await user.save();
-        res.json({ token: tokenForUser(user) });
+        res.json({ token: tokenForUser(user), user: req.user });
     } catch (e) {
         res.status(500).send(e);
     }
@@ -100,7 +101,7 @@ exports.signupAdmin = async (req, res, next) => {
 
     try {
         await Promise.all([company.save(), user.save()]);
-        return res.json({ token: tokenForUser(user) });
+        return res.json({ token: tokenForUser(user), user: req.user });
     } catch (e) {
         return res.status(500).send(e);
     }
